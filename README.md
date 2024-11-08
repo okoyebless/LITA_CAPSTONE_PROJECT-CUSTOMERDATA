@@ -1,4 +1,4 @@
-# LITA_CAPSTONE_PROJECT-CUSTOMERDATA
+### LITA_CAPSTONE_PROJECT-CUSTOMERDATA
 
 ### PROJECT TITLE: Customer Segmentation for a Subscription Service
 
@@ -11,8 +11,8 @@ This secondary data source from LITA_CAPSTONE_PROJECT DATASET.
 
 ### TOOLS USED
      - Microsoft Excel for cleaning, analyzing and visualization of data
-        - SQL - Structured Query Language for querying of data.
-          - Power BI for data visualization
+     - SQL - Structured Query Language for querying of data.
+     - Power BI for data visualization
           
 ### DATA ANALYSIS
 - Excel
@@ -28,25 +28,75 @@ This secondary data source from LITA_CAPSTONE_PROJECT DATASET.
 
 
   - SQL
-            CREATE DATABASE LITAPROJECT_DB
+
+        CREATE DATABASE LITAPROJECT_DB
+
+        SELECT * FROM  [dbo].[LITA CUSTOMERDATA]
+
+     a. TOTAL NUMBER OF CUSTOMER FOR EACH REGION
 
 
-             SELECT * FROM [dbo].[LITA CUSTOMERDATA]
+        SELECT COUNT(CustomerID)AS TotalNumberOfCustomer, Region FROM [dbo].[LITA CUSTOMERDATA]
+          GROUP BY Region
 
 
-        a. TOTAL NUMBER OF CUSTOMER FOR EACH REGION
+     b. MOST POPULAR SUBSCRIPTION TPYE BY THE NUMBER OF CUSTOMERS
+
+
+        SELECT TOP 1 COUNT(CUSTOMERID)AS NumberOfCustomer , SubscriptionType
+          FROM [dbo].[LITA CUSTOMERDATA]
+             GROUP BY SubscriptionType
+                ORDER BY COUNT(CUSTOMERID) DESC
+
+
+     c. CUSTOMERS WHO CANCELED THEIR SUBSCRIPTION WITHIN 6MONTHS
+ 
+
+        SELECT CustomerName FROM [dbo].[LITA CUSTOMERDATA]
+            where Canceled = 1
+               AND DATEDIFF (MONTH, SubscriptionStart, SubscriptionEnd) <=6;
+
+
+     d. AVERAGE SUBSCRIPTION DURATION FOR ALL CUSTOMERS
+
+
+        SELECT AVG(DATEDIFF(DAY, SubscriptionStart, SubscriptionEnd)) 
+            AS AverageSubscriptionDuration FROM [dbo].[LITA CUSTOMERDATA]
+
+
+     e. CUSTOMER WITH SUBSCRIPTION LONGER THAN 12 MONTHS
+
+
+        SELECT CustomerName FROM [dbo].[LITA CUSTOMERDATA]
+              where DATEDIFF (MONTH, SubscriptionStart, SubscriptionEnd) >12; 
+
+
+     f. TOTAL REVENUE BY SUBSCRIPTION TYPE 
+
+
+        SELECT SUM(Revenue)as TotalRevenue, SubscriptionType FROM [dbo].[LITA CUSTOMERDATA]
+            GROUP BY SubscriptionType
+
+
+     g. TOP 3 REGIONS BY SUBSCRIPTION CANCELLATIONS
 
     
-           SELECT COUNT(CustomerID)as TotalNumberOfCustomer, Region FROM [dbo].[LITA CUSTOMERDATA]
-           GROUP BY Region
+        SELECT TOP 3 Region, COUNT(CustomerID) AS Cancellations FROM [dbo].[LITA CUSTOMERDATA]
+             where Canceled = 1
+                 GROUP BY Region
+                     ORDER BY Cancellations DESC
 
-        b. most popular subcription type by the number of customers
 
-    
-           SELECT TOP 1 COUNT(CUSTOMERID)AS NumberOfCustomer , SubscriptionType
-                 FROM [dbo].[LITA CUSTOMERDATA]
-                      GROUP BY SubscriptionType
-                           ORDER BY COUNT(CUSTOMERID) DESC
+     h. TOTAL NUMBER OF ACTIVE AND CANCELED SUBSCRIPTION
+
+
+        SELECT SUM (CASE WHEN Canceled =0 THEN 1 ELSE 0 END) AS ActiveSubscriptions, 
+               SUM (CASE WHEN Canceled =1 THEN 1 ELSE 0 END) AS CanceledSubscriptions
+                    FROM[dbo].[LITA CUSTOMERDATA]
+
+
+
+
 
 
 
